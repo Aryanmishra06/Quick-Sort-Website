@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Sort Application</title>
+    <style>
+        /* --- MERGED STYLES --- */
+        
+        /* Base Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #8CE4FF;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Shared Button Styles - Resized */
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;       /* Smaller padding */
+            background: #FFA239;
+            color: white;
+            border-radius: 8px;       /* Smaller radius */
+            text-decoration: none;
+            font-size: 1rem;          /* Standard font size */
+            font-weight: bold;
+            transition: 0.25s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #FF5656;
+            transform: scale(1.05);
+        }
+
+        /* --- LANDING PAGE STYLES --- */
+        .landing-box {
+            width: 500px;             /* Reduced width */
+            padding: 40px;            /* Reduced padding */
+            background: #FEEE91;
+            border-radius: 15px;      /* Smaller radius */
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Softer shadow */
+        }
+
+        .landing-box h1 {
+            font-size: 2.5rem;        /* Smaller heading */
+            color: #FF5656;
+            margin-bottom: 20px;
+            font-weight: 800;
+            margin-top: 0;
+        }
+
+        .tagline {
+            font-size: 1rem;          /* Standard text size */
+            color: #444;
+            line-height: 1.6;
+            white-space: pre-line;
+            margin-bottom: 30px;
+        }
+
+        /* --- APP PAGE STYLES --- */
+        .container {
+            width: 500px;             /* Reduced width */
+            padding: 40px;            /* Reduced padding */
+            background: #FEEE91;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        .container h1 {
+            margin-bottom: 25px;
+            color: #FF5656;
+            font-size: 2.2rem;        /* Smaller heading */
+            font-weight: 800;
+            margin-top: 0;
+        }
+
+        .desc {
+            font-size: 1rem;          /* Standard text size */
+            margin-bottom: 30px;
+            color: #444;
+            line-height: 1.6;
+        }
+
+        .input {
+            width: 100%;
+            padding: 12px;            /* Smaller padding */
+            border-radius: 8px;
+            border: 2px solid #FFA239; /* Thinner border */
+            margin-top: 20px;
+            margin-bottom: 25px;
+            font-size: 1rem;
+            outline: none;
+            background: rgba(255,255,255,0.9);
+            box-sizing: border-box;
+        }
+
+        .output-box {
+            margin-top: 20px;
+            padding: 15px;            /* Smaller padding */
+            min-height: 40px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.9);
+            border-left: 5px solid #FFA239; /* Thinner border */
+            font-size: 1rem;
+            text-align: left;
+        }
+
+        .output-box h2 {
+             font-size: 1.2rem;
+             margin-top: 0;
+        }
+
+        /* Utility Class to Toggle Views */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- VIEW 1: LANDING PAGE -->
+    <div id="view-landing" class="landing-box">
+        <h1>Quick Sort</h1>
+
+        <div class="tagline">
+Created by:
+Aryan Mishra - 202310101150240
+Anurag Tiwari - 202310101150227
+Ashish Singh - 202310101150229
+Ansh Tripathi - 202310101150206
+        </div>
+
+        <button class="btn" onclick="switchView('view-info')">Enter Website →</button>
+    </div>
+
+    <!-- VIEW 2: INFO PAGE -->
+    <div id="view-info" class="container hidden">
+        <h1>Quick Sort</h1>
+        <p class="desc">
+            Quick Sort is a fast divide-and-conquer sorting algorithm.
+            It picks a pivot, partitions the list, and recursively sorts the remaining elements.
+            It is widely used because of its efficiency and simplicity.
+        </p>
+
+        <button class="btn" onclick="switchView('view-tool')">Try Quick Sort →</button>
+    </div>
+
+    <!-- VIEW 3: TOOL PAGE -->
+    <div id="view-tool" class="container hidden">
+        <h1>Try Quick Sort</h1>
+
+        <input id="inputNums" class="input" 
+               placeholder="Enter numbers separated by commas">
+
+        <button class="btn" onclick="performQuickSort()">Sort</button>
+
+        <h2 style="margin-top: 25px; font-size: 1.2rem; color: #333;">Sorted Output</h2>
+        <div id="output" class="output-box"></div>
+        
+        <div style="margin-top: 25px;">
+            <button class="btn" style="background-color: #FF5656; font-size: 0.9rem; padding: 10px 20px;" onclick="switchView('view-info')">← Back to Info</button>
+        </div>
+    </div>
+
+    <script>
+        // --- NAVIGATION LOGIC ---
+        function switchView(viewId) {
+            document.getElementById('view-landing').classList.add('hidden');
+            document.getElementById('view-info').classList.add('hidden');
+            document.getElementById('view-tool').classList.add('hidden');
+
+            document.getElementById(viewId).classList.remove('hidden');
+        }
+
+        // --- QUICK SORT LOGIC ---
+        function quickSort(arr) {
+            if (arr.length <= 1) return arr;
+            let pivot = arr[arr.length - 1];
+            let left = [];
+            let right = [];
+
+            for (let i = 0; i < arr.length - 1; i++) {
+                arr[i] < pivot ? left.push(arr[i]) : right.push(arr[i]);
+            }
+
+            return [...quickSort(left), pivot, ...quickSort(right)];
+        }
+
+        function performQuickSort() {
+            let input = document.getElementById("inputNums").value;
+            if (!input.trim()) {
+                document.getElementById("output").innerText = "Please enter some numbers.";
+                return;
+            }
+
+            let nums = input.split(",").map(n => parseFloat(n.trim())).filter(n => !isNaN(n));
+
+            if (nums.length === 0) {
+                document.getElementById("output").innerText = "Invalid input. Use format: 5, 2, 9, 1";
+                return;
+            }
+
+            let result = quickSort(nums);
+            document.getElementById("output").innerText = result.join(", ");
+        }
+    </script>
+</body>
+</html>
